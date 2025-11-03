@@ -1,6 +1,10 @@
-# golangci-lint-langserver
+# zed-golangci-lint-monorepo
 
-> Fork of [golangci-lint-langserver](https://github.com/nametake/golangci-lint-langserver) that includes [#66](https://github.com/nametake/golangci-lint-langserver/pull/66).
+> Fork of [golangci-lint-langserver](https://github.com/nametake/golangci-lint-langserver) and [zed-extensions/golangci-lint](https://github.com/zed-extensions/golangci-lint) that includes [#66](https://github.com/nametake/golangci-lint-langserver/pull/66).
+
+---
+
+# # golangci-lint-langserver
 
 golangci-lint-langserver is [golangci-lint](https://github.com/golangci/golangci-lint) language server.
 
