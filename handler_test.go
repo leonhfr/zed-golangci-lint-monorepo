@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"path/filepath"
 	"testing"
@@ -10,6 +11,71 @@ import (
 
 func pt(s string) *string {
 	return &s
+}
+
+func TestFindModuleRoot(t *testing.T) {
+	tempDir := t.TempDir()
+	tempSubDir := filepath.Join(tempDir, "subdir")
+	if err := os.MkdirAll(tempSubDir, 0o755); err != nil {
+		t.Fatalf("failed to create temp directory: %v", err)
+	}
+
+	tests := []struct {
+		name      string
+		dir       string
+		rootDir   string
+		want      string
+		wantError bool
+	}{
+		{
+			name:      "finds go.mod in current directory",
+			dir:       "./testdata/noconfig",
+			rootDir:   "./testdata",
+			want:      "testdata/noconfig",
+			wantError: false,
+		},
+		{
+			name:      "finds go.mod in parent directory (monorepo)",
+			dir:       "./testdata/monorepo/foo",
+			rootDir:   "./testdata/monorepo",
+			want:      "testdata/monorepo/foo",
+			wantError: false,
+		},
+		{
+			name:      "returns error when no go.mod found",
+			dir:       tempSubDir,
+			rootDir:   tempDir,
+			wantError: true,
+		},
+		{
+			name:      "returns error when directory is outside root",
+			dir:       "./testdata",
+			rootDir:   "./testdata/noconfig",
+			wantError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := findModuleRoot(tt.dir, tt.rootDir)
+			if tt.wantError {
+				if err == nil {
+					t.Errorf("findModuleRoot() expected error, got nil")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Fatalf("findModuleRoot() returned unexpected error: %v", err)
+			}
+
+			gotAbs, _ := filepath.Abs(got)
+			wantAbs, _ := filepath.Abs(tt.want)
+			if gotAbs != wantAbs {
+				t.Errorf("findModuleRoot() = %v, want %v", gotAbs, wantAbs)
+			}
+		})
+	}
 }
 
 func TestLangHandler_lint_Integration(t *testing.T) {

@@ -1,5 +1,7 @@
 # golangci-lint-langserver
 
+> Fork of [golangci-lint-langserver](https://github.com/nametake/golangci-lint-langserver) that includes [#66](https://github.com/nametake/golangci-lint-langserver/pull/66).
+
 golangci-lint-langserver is [golangci-lint](https://github.com/golangci/golangci-lint) language server.
 
 [![asciicast](https://asciinema.org/a/308369.svg)](https://asciinema.org/a/308369)
